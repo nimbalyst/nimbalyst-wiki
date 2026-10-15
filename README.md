@@ -92,7 +92,7 @@ codex plugin marketplace add nimbalyst/nimbalyst-wiki
 codex plugin add nimbalyst-wiki@nimbalyst-wiki
 ```
 
-Using Cursor, VS Code, Cowork or the Codex app? See [Other agents](#other-agents).
+Using Cursor, VS Code, Cowork or the Codex app? See [Other agents](#other-agents). The team wiki's add-on comes later, only when you [share the wiki with your team](#share-it-with-your-team).
 
 ### 2. Build the wiki
 
@@ -258,17 +258,7 @@ Pages hold more than text. Ask your agent for a drawing, a mind map, a spreadshe
 
 ## Share it with your team
 
-When your team needs the wiki too, ask your agent to move it to [Nimbalyst Teams](https://nimbalyst.com/wiki/teams/), or run the commands yourself. Your text pages, typed pages and the links between them move to a team wiki where everyone edits the same pages in their browser and every teammate's agents write into it.
-
-```
-Move this wiki to a team wiki for Northwind.
-```
-
-```sh
-nim login
-nim wiki team-create "Northwind"
-nim wiki move-to-team
-```
+Start with a local wiki and move it to [Nimbalyst Teams](https://nimbalyst.com/wiki/teams/) when your team needs it. Your text pages, typed pages, types and the links between them move to a team wiki where everyone edits the same pages in their browser and every teammate's agents write into it. Your local files stay where they are.
 
 - Sign in with your Google account.
 - Create a team and invite teammates by email.
@@ -281,23 +271,84 @@ nim wiki move-to-team
   </picture>
 </p>
 
-### What happens during the move
+### Upgrade a local wiki to a team wiki
 
-In Claude Code, `/nimbalyst-wiki:team` walks you through it:
+The team wiki uses a separate add-on plugin, `nimbalyst-wiki-team`. It holds the `nimbalyst-team` server and the Nimbalyst sign-in, and it is separate so a local wiki never asks you to sign in. You don't need to install it ahead of time: the team skill offers to install it when you share the wiki.
 
-1. **Sign in.** The team wiki's server comes in a small add-on plugin, `nimbalyst-wiki-team`. If it is not installed, Claude installs it after you agree and asks you to restart with `claude --continue`. Then run `/mcp`, choose `nimbalyst-team` and Authenticate. A browser page opens where you sign in to Nimbalyst or create an account.
-2. **Choose a team and project.** With no team yet, Claude proposes a name and creates the team, its first project and a Home page, connected to this repository's git remote. Already in a team? Connect to one of its projects or create a new one.
-3. **Approve the move.** The local server signs in with the same account so pages go straight from your files to Nimbalyst. Claude opens the approval page and you confirm the code.
-4. **Move.** Claude shows what will move, then moves pages, typed pages, types, hierarchy, order, fields and links in one step. If it is interrupted, running it again picks up where it stopped. Add `--dry-run` to `nim wiki move-to-team` to preview from a terminal.
-5. **Invite.** Claude opens the team wiki in your browser and can invite teammates by email, reading the list back to you first, or create an invite link.
+#### Claude Code
 
-Your local files are not deleted. Commit `.nimbalyst/wiki.json` so your teammates' agents find the same project.
+Update the plugin to 0.8.0 or later (see [Updating the plugin](#updating-the-plugin)), then run the team skill, with your team's name if you like:
+
+```
+/nimbalyst-wiki:team Northwind
+```
+
+You can also ask in your own words: "Move this wiki to a team wiki for Northwind." Claude walks you through these steps:
+
+1. **Install the add-on.** Claude asks before it installs `nimbalyst-wiki-team`. Claude Code loads plugins when a session starts, so type `/exit`, then run `claude --continue` in the same folder to come back to the same conversation.
+2. **Sign in.** Run `/mcp`, choose `nimbalyst-team` and pick Authenticate. A browser page opens where you sign in to Nimbalyst or create an account. Tell Claude when it says you are connected.
+3. **Choose a team and project.** With no team yet, Claude proposes a name and creates the team, its first project and a Home page, connected to this repository's git remote. Already in a team? Connect to one of its projects or create a new one.
+4. **Approve the move.** The local server signs in with the same account so pages go straight from your files to Nimbalyst. Claude opens the approval page and you confirm the code.
+5. **Move.** Claude shows what will move, then moves pages, typed pages, types, hierarchy, order, fields and links in one step. If it is interrupted, running it again picks up where it stopped.
+6. **Invite.** Claude opens the team wiki in your browser and can invite teammates by email, reading the list back to you first, or create an invite link.
+7. **Commit the connection.** Commit `.nimbalyst/wiki.json` so your teammates' agents find the same project. Claude also offers to add both plugins to this repository's `.claude/settings.json`, so teammates who open the repository in Claude Code are offered them. Commit that file too.
+
+Your local files are not deleted. They are marked as moved, and the local Home page links to the team wiki.
+
+#### Codex
+
+Ask Codex to "move this wiki to a team wiki." It follows the same steps. When it installs the add-on, sign in from a terminal, then start a new Codex session in the project and ask it to continue:
+
+```sh
+codex plugin add nimbalyst-wiki-team@nimbalyst-wiki   # Codex runs this for you after you agree
+codex mcp login nimbalyst-team
+```
+
+#### From a terminal
+
+The `nim` command line moves the wiki without the add-on:
+
+```sh
+nim login
+nim wiki team-create "Northwind"
+nim wiki move-to-team --dry-run    # preview what will move
+nim wiki move-to-team
+```
+
+#### Cursor, VS Code, Cowork and other agents
+
+These agents don't use plugins, so there is no add-on to install. Move the wiki from a terminal with the `nim` commands above, or ask your agent to run them for you. `nim login` opens a browser page where you sign in to Nimbalyst, and `nim wiki move-to-team` ends with a link to the team wiki's Home page.
+
+To work on the team wiki from your agent afterward, add the team server to the same MCP config as `nim mcp` (see [Other agents](#other-agents)). Your agent asks you to sign in to Nimbalyst the first time it connects.
+
+```json
+{
+  "mcpServers": {
+    "nimbalyst-team": {
+      "type": "http",
+      "url": "https://sync.nimbalyst.com/mcp"
+    }
+  }
+}
+```
+
+### Already on a team wiki from 0.7.0 or earlier
+
+The team server moved out of the main plugin in 0.8.0. After you update, install the add-on once and sign in again. Your team project, pages and `.nimbalyst/wiki.json` stay as they are.
+
+- **Claude Code:** `/plugin install nimbalyst-wiki-team@nimbalyst-wiki`, restart Claude Code, then run `/mcp`, choose `nimbalyst-team` and Authenticate.
+- **Codex:** `codex plugin add nimbalyst-wiki-team@nimbalyst-wiki`, then `codex mcp login nimbalyst-team`.
 
 ### If you were invited
 
 An invite email or link signs you in to Nimbalyst in the browser and opens the team's wiki. You can read, edit and comment there with nothing installed.
 
-To use the wiki from Claude Code too, install this plugin and the team add-on (`/plugin install nimbalyst-wiki-team@nimbalyst-wiki`), restart Claude Code, run `/mcp`, choose `nimbalyst-team` and Authenticate with the same email. In Codex, run `codex plugin add nimbalyst-wiki-team@nimbalyst-wiki`, then `codex mcp login nimbalyst-team`. If the repository has a committed `.nimbalyst/wiki.json`, your agent uses that team project right away; otherwise it finds the project through the repository's git remote.
+To use the wiki from your agent too, add the marketplace as in [Get started](#get-started), install both plugins and sign in with the same email:
+
+- **Claude Code:** `/plugin install nimbalyst-wiki@nimbalyst-wiki` and `/plugin install nimbalyst-wiki-team@nimbalyst-wiki` (or accept them when Claude Code offers them for the repository), restart Claude Code, run `/mcp`, choose `nimbalyst-team` and Authenticate.
+- **Codex:** `codex plugin add nimbalyst-wiki@nimbalyst-wiki` and `codex plugin add nimbalyst-wiki-team@nimbalyst-wiki`, then `codex mcp login nimbalyst-team`.
+
+If the repository has a committed `.nimbalyst/wiki.json`, your agent uses that team project right away; otherwise it finds the project through the repository's git remote.
 
 ---
 
@@ -338,7 +389,7 @@ Yes. The app's Local wiki is the same folder of files, so you can start in your 
 | `/nimbalyst-wiki:setup` | Builds the first version of the wiki: Home, the writing guide ("How we write this wiki") and starter pages. It can also define types. Running it again fills gaps and never duplicates or overwrites what people wrote. |
 | `/nimbalyst-wiki:capture` | Records what this session decided, answered and left open, in the page each one affects. If nothing is worth keeping, it says so. |
 | `/nimbalyst-wiki:recall` | Answers what the wiki says or decided about a question or an area, and which pages cover the code you are about to change. The agent also uses it unasked for a "why did we..." question. |
-| `/nimbalyst-wiki:team` | Moves the wiki to Nimbalyst Teams and invites teammates. See [Share it with your team](#share-it-with-your-team). |
+| `/nimbalyst-wiki:team` | Moves the wiki to Nimbalyst Teams, installing the `nimbalyst-wiki-team` add-on the first time, and invites teammates. See [Upgrade a local wiki to a team wiki](#upgrade-a-local-wiki-to-a-team-wiki). |
 | `/nimbalyst-wiki:start` | A short tour of the plugin. |
 | `/nimbalyst-wiki:connect` | Chooses which wiki the session uses and connects a repository to a team project. Runs on its own when needed. |
 | `/nimbalyst-wiki:update` | The writing guide the agent follows for every wiki edit. You rarely call it yourself. |
@@ -352,7 +403,7 @@ Two MCP servers, listed by `/mcp` in Claude Code and `codex mcp list` in Codex:
 | `nimbalyst-local` | The local wiki and its browser view. Runs on your machine and needs nothing else installed. When you move the wiki to a team, it signs in to Nimbalyst to copy the pages. |
 | `nimbalyst-session` | Lets the agent cite what you typed in this session when it records a decision. Reads only this session's transcript, on your machine. |
 
-The team wiki's server, `nimbalyst-team`, is in a separate add-on plugin, `nimbalyst-wiki-team`, so a local wiki never asks you to sign in. `/nimbalyst-wiki:team` installs it when you share the wiki. If you used the team wiki with 0.7.0 or earlier, install the add-on once after updating.
+The team wiki's server, `nimbalyst-team`, is in a separate add-on plugin, `nimbalyst-wiki-team`, so a local wiki never asks you to sign in. `/nimbalyst-wiki:team` installs it when you share the wiki. If you used the team wiki with 0.7.0 or earlier, install the add-on once after updating (see [Already on a team wiki](#already-on-a-team-wiki-from-070-or-earlier)).
 
 In Claude Code the plugin also adds two hooks. At the start of a session it tells the agent what the local wiki covers and which pages cover files you have changed. When a session with real work ends, it reminds the agent once to run `/nimbalyst-wiki:capture`, naming the pages the session's changes touched.
 
@@ -392,6 +443,8 @@ claude plugin update nimbalyst-wiki@nimbalyst-wiki
 
 **Codex:** run `codex plugin marketplace upgrade nimbalyst-wiki` and start a new session.
 
+Updating from 0.7.0 or earlier with a team wiki? Also install the team add-on once; see [Already on a team wiki](#already-on-a-team-wiki-from-070-or-earlier).
+
 **Coming from 0.3.0?** That version was installed from the `nimbalyst/nimbalyst` marketplace. Switch to this one so you get updates and the browser view, then restart Claude Code. Your wiki is files in your repository, so nothing in it changes.
 
 ```
@@ -430,6 +483,8 @@ npm install -g @nimbalyst/cli
 ```
 
 If the app cannot find `nim`, use the full path that `which nim` prints. Then ask the agent to "start a wiki for this repo." A wiki started in one agent is ready in the others.
+
+To share the wiki with your team from these agents, see [Cursor, VS Code, Cowork and other agents](#cursor-vs-code-cowork-and-other-agents).
 
 These agents get the wiki tools but not the plugin's skills (`setup`, `capture` and the writing guide), so ask for what you want in your own words. To open the wiki in the browser from them, also install the browser app: `npm install -g @nimbalyst/wiki-web`.
 
