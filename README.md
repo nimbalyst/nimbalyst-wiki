@@ -64,7 +64,7 @@ Overwhelmed and disorganized working with agents? Your agent distills what you w
 
 ## Watch the demo
 
-https://github.com/user-attachments/assets/95c89f65-98c8-461a-8429-0acefaa22c22
+https://github.com/user-attachments/assets/ee9437ab-bbeb-4f3d-9d65-78e9afe24f47
 
 <p align="center">
   <sub>The wiki in Claude Code and your browser, from installing the plugin to editing a page.</sub>
