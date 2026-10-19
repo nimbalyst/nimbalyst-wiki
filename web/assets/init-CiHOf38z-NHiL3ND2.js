@@ -1,1 +1,0 @@
-typeof process>"u"&&(globalThis.process={env:{NODE_ENV:"production"},browser:!0,platform:""});function t(e,r){switch(arguments.length){case 0:break;case 1:this.range(e);break;default:this.range(r).domain(e);break}return this}export{t};

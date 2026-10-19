@@ -1,1 +1,0 @@
-import{_ as s,j as o}from"./index-CJPWMXau-B-URthjG.js";typeof process>"u"&&(globalThis.process={env:{NODE_ENV:"production"},browser:!0,platform:""});var a=s((e,r)=>{let t;return r==="sandbox"&&(t=o("#i"+e)),(r==="sandbox"?o(t.nodes()[0].contentDocument.body):o("body")).select(`[id="${e}"]`)},"getDiagramElement");export{a as d};
