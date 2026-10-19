@@ -4,8 +4,10 @@
       "type": "stdio",
       "command": "npx",
       "args": [
+        "--prefix",
+        "/",
         "-y",
-        "@nimbalyst/cli@0.11.0",
+        "@nimbalyst/cli@0.11.1",
         "hook",
         "session-inputs"
       ]
@@ -14,8 +16,10 @@
       "type": "stdio",
       "command": "npx",
       "args": [
+        "--prefix",
+        "/",
         "-y",
-        "@nimbalyst/cli@0.11.0",
+        "@nimbalyst/cli@0.11.1",
         "mcp",
         "--plugin-root",
         "${CLAUDE_PLUGIN_ROOT}"
