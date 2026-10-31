@@ -1,6 +1,6 @@
 ---
 name: team
-description: Put this project's wiki on Nimbalyst Teams: sign in, create or choose the team project, move the local wiki into it in one step, open it in the browser, and invite teammates. Use when the user asks to move the local wiki to Teams, share the wiki with their team, create a team, or invite people to the wiki.
+description: "Put this project's wiki on Nimbalyst Teams: sign in, create or choose the team project, move the local wiki into it in one step, open it in the browser, and invite teammates. Use when the user asks to move the local wiki to Teams, share the wiki with their team, create a team, or invite people to the wiki."
 argument-hint: "[optional team name]"
 ---
 
